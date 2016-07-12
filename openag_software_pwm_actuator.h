@@ -24,6 +24,8 @@ class SoftwarePwmActuator {
     bool _is_active_low;
     float _duty_cycle;
     uint32_t _last_cycle_start;
+    uint32_t _last_cmd;
+    static const int _max_update_interval = 10000;
 };
 
 #endif

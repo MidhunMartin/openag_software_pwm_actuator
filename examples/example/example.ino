@@ -1,6 +1,6 @@
 #include <openag_software_pwm_actuator.h>
 
-#define PIN 6
+#define PIN 13
 
 SoftwarePwmActuator actuator(PIN, false, 1000);
 

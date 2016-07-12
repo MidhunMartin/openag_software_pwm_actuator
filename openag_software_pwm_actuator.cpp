@@ -5,6 +5,7 @@ SoftwarePwmActuator::SoftwarePwmActuator(int pin, bool is_active_low, int period
   _is_active_low = is_active_low;
   _period = period;
   _duty_cycle = 0;
+  _last_cmd = 0;
 }
 
 void SoftwarePwmActuator::begin() {
@@ -14,6 +15,15 @@ void SoftwarePwmActuator::begin() {
 
 void SoftwarePwmActuator::update() {
   uint32_t curr_time = millis();
+  if ((curr_time - _last_cmd) > _max_update_interval) {
+    if (_is_active_low) {
+      digitalWrite(_pin, HIGH);
+    }
+    else {
+      digitalWrite(_pin, LOW);
+    }
+    return;
+  }
   if (curr_time > _last_cycle_start + _period) {
     _last_cycle_start += _period;
   }
@@ -36,6 +46,7 @@ void SoftwarePwmActuator::update() {
 }
 
 void SoftwarePwmActuator::set_cmd(std_msgs::Float32 cmd) {
+  _last_cmd = millis();
   float val = cmd.data;
   if (val < 0 || val > 1) {
     has_error = true;
